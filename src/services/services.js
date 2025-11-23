@@ -11,9 +11,11 @@ const axios = require('axios');
 const END_POINTS = require('../constants/endpoints');
 const APIError = require('../controller/errorController');
 
-async function addToCart(token, productId, qty) {
+async function addToCart(token, productId, qty=1) {
   try {
     const user = getUserInfoFromToken(token);
+    if(!user?.userId)
+      throw new APIError(APIError.messages.NOT_AUTHORIZED,401)
     const productInfo = await getProductDetales(productId);
     productInfo['productId'] = productInfo['_id'];
     delete productInfo['_id'];
